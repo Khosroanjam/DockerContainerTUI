@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaults = {
   host: '',
   title: 'Docker Admin',
+  mode: 'auto', // 'ssh' | 'local' | 'auto' (ssh when host is set, otherwise local)
   port: 22,
   username: os.userInfo().username,
   privateKey: '',
@@ -25,9 +26,12 @@ export function loadConfig() {
   if (fs.existsSync(file)) fromFile = JSON.parse(fs.readFileSync(file, 'utf8'));
   const cfg = { ...defaults, ...fromFile };
   if (process.env.DOCKER_TUI_HOST) cfg.host = process.env.DOCKER_TUI_HOST;
+  if (process.env.DOCKER_TUI_MODE) cfg.mode = process.env.DOCKER_TUI_MODE;
   if (process.env.DOCKER_TUI_USER) cfg.username = process.env.DOCKER_TUI_USER;
   if (process.env.DOCKER_TUI_PASSWORD) cfg.password = process.env.DOCKER_TUI_PASSWORD;
-  if (!cfg.privateKey && !cfg.password) {
+  if (cfg.mode === 'auto') cfg.mode = cfg.host ? 'ssh' : 'local';
+  cfg.label = cfg.mode === 'local' ? `local (${os.hostname()})` : `${cfg.username}@${cfg.host}:${cfg.port}`;
+  if (cfg.mode === 'ssh' && !cfg.privateKey && !cfg.password) {
     const found = ['id_ed25519', 'id_rsa', 'id_ecdsa']
       .map((n) => path.join(os.homedir(), '.ssh', n))
       .find((p) => fs.existsSync(p));

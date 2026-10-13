@@ -210,7 +210,7 @@ export function startUi({ cfg, ssh, docker }) {
   function renderChrome() {
     const conn = ssh.ready ? fg(C.green, '● connected') : fg(C.red, '● disconnected, reconnecting...');
     const clock = new Date().toLocaleTimeString('en-GB');
-    const left = ` ◆ ${cfg.title}   ${cfg.username}@${cfg.host}:${cfg.port}   ${conn}`;
+    const left = ` ◆ ${cfg.title}   ${cfg.label}   ${conn}`;
     const w = screen.width;
     const visible = left.replace(/\{[^}]*\}/g, '').length;
     const worst = state.alerts?.[0]?.level;
@@ -475,8 +475,11 @@ export function startUi({ cfg, ssh, docker }) {
     polling = true;
     try {
       monitor.update(await docker.metrics());
+      monitor.failed = 0;
       if (state.tab === 0 && !state.overlay) renderList();
-    } catch { /* transient; next tick retries */ } finally {
+    } catch {
+      monitor.failed = (monitor.failed || 0) + 1; // transient errors retry on the next tick
+    } finally {
       polling = false;
     }
   }

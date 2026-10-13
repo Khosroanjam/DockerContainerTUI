@@ -16,6 +16,10 @@ export class Ssh {
     this.onState = () => {};
   }
 
+  cd(dir) {
+    return `cd '${dir.split("'").join("'\\''")}'`;
+  }
+
   connect() {
     const { cfg } = this;
     const opts = {

@@ -8,6 +8,7 @@
   "composeDir": "",
   "refreshSeconds": 5,
   "title": "Docker Admin",
+  "mode": "auto",
   "alerts": {
     "warn": 70,
     "crit": 90,

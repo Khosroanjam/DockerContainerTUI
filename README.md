@@ -11,6 +11,12 @@ discovered automatically.
 - **Colour alerts** when CPU/RAM/disk or a container crosses a threshold (header turns yellow/red, optional terminal bell)
 - Auto-refresh and automatic reconnect
 
+## Local mode (no SSH)
+
+Install it on the Docker host itself and leave `host` empty (or set `"mode": "local"`): commands then run directly
+on the machine, no SSH key or password needed. `mode` is `auto` by default: SSH when `host` is set, local otherwise.
+The system dashboard needs Linux (it reads `/proc`); container management works anywhere `docker` runs.
+
 ## Requirements
 
 - Node.js 18+
@@ -33,7 +39,8 @@ npm start
 
 | Key | Description |
 |---|---|
-| `host`, `port`, `username` | SSH target |
+| `mode` | `auto` (default), `ssh` or `local` |
+| `host`, `port`, `username` | SSH target (ignored in local mode) |
 | `privateKey` | Path to a key. If empty, `~/.ssh/id_ed25519`, `id_rsa`, `id_ecdsa` are tried, then ssh-agent, then a password prompt |
 | `passphrase` | Passphrase of the key, if any |
 | `sudo` | Run docker as `sudo -n docker` (needs passwordless sudo) |
@@ -42,7 +49,7 @@ npm start
 | `title` | Title shown in the header |
 | `alerts` | `{ "warn": 70, "crit": 90, "beep": true }` thresholds in percent |
 
-Environment overrides: `DOCKER_TUI_CONFIG`, `DOCKER_TUI_HOST`, `DOCKER_TUI_USER`, `DOCKER_TUI_PASSWORD`.
+Environment overrides: `DOCKER_TUI_MODE`, `DOCKER_TUI_CONFIG`, `DOCKER_TUI_HOST`, `DOCKER_TUI_USER`, `DOCKER_TUI_PASSWORD`.
 
 ## Keys
 

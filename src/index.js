@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { loadConfig } from './config.js';
 import { Ssh } from './ssh.js';
+import { Local } from './local.js';
 import { Docker } from './docker.js';
 import { startUi } from './ui.js';
 
@@ -31,13 +32,13 @@ function askHidden(prompt) {
 }
 
 const cfg = loadConfig();
-if (!cfg.host) {
+if (cfg.mode === 'ssh' && !cfg.host) {
   console.error('No host configured. Copy config.example.json to config.json and set "host" and "username"\n(or set DOCKER_TUI_HOST / DOCKER_TUI_USER).');
   process.exit(1);
 }
-console.log(`Connecting to ${cfg.username}@${cfg.host}:${cfg.port} ...`);
+console.log(cfg.mode === 'local' ? 'Running in local mode (no SSH)' : `Connecting to ${cfg.label} ...`);
 
-let ssh = new Ssh(cfg);
+let ssh = cfg.mode === 'local' ? new Local() : new Ssh(cfg);
 try {
   await ssh.connect();
 } catch (err) {

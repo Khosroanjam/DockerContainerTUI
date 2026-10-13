@@ -26,8 +26,8 @@ export class Docker {
 
   async containers() {
     const [ps, stats] = await Promise.all([
-      this.run(`ps -a --format '{{json .}}'`),
-      this.run(`stats --no-stream --format '{{json .}}'`, { timeout: 45000 }).catch(() => ''),
+      this.run(`ps -a --format "{{json .}}"`),
+      this.run(`stats --no-stream --format "{{json .}}"`, { timeout: 45000 }).catch(() => ''),
     ]);
     const byId = new Map(jsonLines(stats).map((s) => [s.ID, s]));
     return jsonLines(ps).map((c) => {
@@ -47,7 +47,7 @@ export class Docker {
   }
 
   async images() {
-    return jsonLines(await this.run(`images --format '{{json .}}'`)).map((i) => ({
+    return jsonLines(await this.run(`images --format "{{json .}}"`)).map((i) => ({
       id: i.ID, repo: i.Repository, tag: i.Tag, size: i.Size, created: i.CreatedSince,
     }));
   }
@@ -66,7 +66,7 @@ export class Docker {
   compose(args, opts) {
     const dir = this.cfg.composeDir;
     if (!dir) throw new Error('composeDir is not set in config.json');
-    return this.ssh.exec(`cd '${dir.replace(/'/g, `'\''`)}' && ${this.bin} compose ${args} 2>&1`, opts)
+    return this.ssh.exec(`${this.ssh.cd(dir)} && ${this.bin} compose ${args} 2>&1`, opts)
       .then((r) => {
         if (r.code !== 0) throw new Error(r.stdout.trim() || `compose exited with ${r.code}`);
         return r.stdout;

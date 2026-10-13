@@ -89,7 +89,7 @@ export function createDashboard(parent, C, A) {
   function update({ monitor, containers }) {
     const s = monitor.snap;
     if (!s || s.cpu == null) {
-      gauges[0].setContent('Collecting data...');
+      gauges[0].setContent(monitor.failed >= 3 ? 'System metrics need a Linux host (reads /proc)' : 'Collecting data...');
       return;
     }
     const data = [
