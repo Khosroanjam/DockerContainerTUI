@@ -1,0 +1,39 @@
+{
+  "name": "docker-ssh-tui",
+  "version": "1.0.0",
+  "description": "Terminal UI to monitor and manage Docker containers on remote servers over SSH",
+  "type": "module",
+  "bin": {
+    "docker-ssh-tui": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "ssh2": "^1.16.0"
+  },
+  "license": "MIT",
+  "keywords": [
+    "docker",
+    "tui",
+    "ssh",
+    "terminal",
+    "monitoring",
+    "containers",
+    "dashboard"
+  ],
+  "files": [
+    "src",
+    "config.example.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USER/docker-ssh-tui.git"
+  }
+}

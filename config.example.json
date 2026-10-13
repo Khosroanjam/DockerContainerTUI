@@ -1,0 +1,16 @@
+{
+  "host": "your-server-ip-or-hostname",
+  "port": 22,
+  "username": "your-ssh-user",
+  "privateKey": "",
+  "passphrase": "",
+  "sudo": false,
+  "composeDir": "",
+  "refreshSeconds": 5,
+  "title": "Docker Admin",
+  "alerts": {
+    "warn": 70,
+    "crit": 90,
+    "beep": true
+  }
+}
